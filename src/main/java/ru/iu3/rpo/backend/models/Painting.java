@@ -1,21 +1,17 @@
 package ru.iu3.rpo.backend.models;
 
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 
 @Entity
-@Table(name = "countries")
+@Table(name = "paintings")
 @Access(AccessType.FIELD)
-public class Country {
-    public Country() {
-    }
+public class Painting {
 
-    public Country(Long id) {
-        this.id = id;
-    }
+    public Painting() { }
+    public Painting(Long id) { this.id = id; }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +21,12 @@ public class Country {
     @Column(name = "name", nullable = false, unique = true)
     public String name;
 
-    @OneToMany(mappedBy = "country")
-    public List<Artist> artists = new ArrayList<>();
+    @Column(name = "museumid")
+    public long museumid;
+
+    @Column(name = "artistid")
+    public long artistid;
+
+    @Column(name = "year")
+    public long year;
 }
