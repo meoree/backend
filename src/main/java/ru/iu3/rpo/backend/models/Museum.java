@@ -1,5 +1,8 @@
 package ru.iu3.rpo.backend.models;
 
+import ch.qos.logback.core.BasicStatusManager;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -26,5 +29,14 @@ public class Museum {
     @Column(name = "location")
     public String location;
 
+    @JsonIgnore
+    @OneToMany
+    public List<Painting> paintings =new ArrayList<>();
 
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(name = "usermuseums",
+            joinColumns = @JoinColumn(name = "museumid"),
+            inverseJoinColumns = @JoinColumn(name = "userid"))
+    public Set<User> users = new HashSet<>();
 }
