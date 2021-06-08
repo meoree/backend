@@ -1,6 +1,8 @@
 import React from "react";
 import BackendService from "../services/BackendService";
 import Utils from "../utils/Utils";
+import {connect} from "react-redux";
+import {userActions} from "../utils/Rdx";
 
 
 class Login extends React.Component {
@@ -12,7 +14,7 @@ class Login extends React.Component {
             password: '',
             loggingIn: false,
             submitted: false,
-            error_message: null
+          //  error_message: null
         };
 
         this.handleChange = this.handleChange.bind(this)
@@ -36,31 +38,31 @@ class Login extends React.Component {
                     неопределенное, возможно большое, время.*/
         BackendService.login(username, password)
             .then( resp => {
-                console.log(resp.data)
-                Utils.saveUser(resp.data)
+                this.props.dispatch(userActions.login(resp.data))
                 this.props.history.push('/home')
             })
             .catch(
                 //Информация об ошибке
                 err => {
-                    if (err.response && err.response.status === 401)
+                   /* if (err.response && err.response.status === 401)
                         this.setState({error_message: "Ошибка авторизации"});
                     else
-                        this.setState({error_message: err.message});
+                        this.setState({error_message: err.message});*/
+                    this.state({loggingIn: false})
                 }
             )
-            .finally(() => this.setState({loggingIn: false}))
     }
 
     /* Извлекает, нужные для прорисовки, значения из объекта состояния */
     render() {
-        console.log("render") //для отладки
+
+       // console.log("render") //для отладки
         let {submitted, username, password, loggingIn} = this.state;
         return (
             <div className="col-md-6 mr-0">
-                {
+                {/*
                     this.state.error_message &&
-                    <div className="alert alert-danger mt-1 mr-0 ml-0"> {this.state.error_message}</div>
+                    <div className="alert alert-danger mt-1 mr-0 ml-0"> {this.state.error_message}</div>*/
                 }
                 <h2>Вход</h2>
                 {/* Изменяет состояние флажка submitted, поэтому компонент перерисовывается */}
@@ -94,4 +96,4 @@ class Login extends React.Component {
     }
 }
 
-export default Login;
+export default connect()(Login);

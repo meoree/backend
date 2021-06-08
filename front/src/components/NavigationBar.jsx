@@ -1,11 +1,14 @@
 
 import React from "react";
+import {connect} from "react-redux";
 import { Navbar, Nav, NavDropdown} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faHome, faUser} from '@fortawesome/fontawesome-free-solid';
 import {Link, withRouter} from "react-router-dom";
 import Utils from "../utils/Utils";
-import BackendService from "../services/BackendService";
+import BackendService from "/backend/front/src/services/BackendService";
+import {userActions} from "../utils/Rdx";
+
 
 
 class NavigationBar extends React.Component{
@@ -34,12 +37,12 @@ class NavigationBar extends React.Component{
                         <Nav.Link onClick={() => {this.props.history.push("/home")}}>Yet another home</Nav.Link>
                     </Nav>
                 </Navbar.Collapse>
-                <Navbar.Text>{uname}</Navbar.Text>
-                {   uname &&
-                    <Nav.Link onClick={this.logout}><FontAwesomeIcon icon={faUser} fixedWidth/>{' '}Logout</Nav.Link>
+                <Navbar.Text>{this.props.user && this.props.user.name}</Navbar.Text>
+                {this.props.user &&
+                <Nav.Link onClick={this.logout}><FontAwesomeIcon icon={faUser} fixedWidth/>{' '}Выход</Nav.Link>
                 }
-                {   !uname &&
-                <Nav.Link as={Link} to="/login"><FontAwesomeIcon icon={faUser} fixedWidth/>{' '}Login</Nav.Link>
+                {!this.props.user &&
+                <Nav.Link as={Link} to="/login"><FontAwesomeIcon icon={faUser} fixedWidth/>{' '}Вход</Nav.Link>
                 }
             </Navbar>
         );
@@ -47,10 +50,14 @@ class NavigationBar extends React.Component{
 
     logout() {
         BackendService.logout().finally(() => {
-            Utils.removeUser();
-            this.goHome();
+            this.props.dispatch(userActions.logout())
+            this.props.history.push('/login')
         })
         }
 }
 
-export default withRouter(NavigationBar);
+function mapStateToProps(state){
+    const {user} = state.authentication;
+    return {user};
+}
+export default connect(mapStateToProps)(withRouter(NavigationBar));
