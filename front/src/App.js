@@ -6,6 +6,7 @@ import { createBrowserHistory } from 'history';
 import NavigationBar from './components/NavigationBar'
 import Switch from "react-bootstrap/Switch";
 import Home from "./components/Home";
+import Login from "./components/Login"
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
          <div className="container-fluid">
              <Switch>
                  <Route path="/home/" exact component={Home}/>
+                 <Route path="/login" exact component={Login}/>
              </Switch>
          </div>
      </Router>
